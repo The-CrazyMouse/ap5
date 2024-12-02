@@ -14,7 +14,8 @@ import { MongoClient, ObjectId } from 'mongodb';
 const app = express();
 app.use(express.json());
 app.use(express.static('public')); // Serve static files from the 'public' directory
-const url = process.env.MONGODB_URI;
+//const url = process.env.MONGODB_URI;
+const url = 'mongodb+srv://andredantas:banana97@cluster0.la7oo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const dbName = 'studentsdb';
 let db;
 

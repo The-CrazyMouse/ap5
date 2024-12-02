@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.static('public')); // Serve static files from the 'public' directory
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/studentsdb');
+mongoose.connect('mongodb+srv://andredantas:banana97@cluster0.la7oo.mongodb.net/studentsdb?retryWrites=true&w=majority&appName=Cluster0');
 
 // Define the Student schema
 const studentSchema = new mongoose.Schema({

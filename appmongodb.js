@@ -14,7 +14,6 @@ import { MongoClient, ObjectId } from 'mongodb';
 const app = express();
 app.use(express.json());
 app.use(express.static('public')); // Serve static files from the 'public' directory
-
 const url = 'mongodb://localhost:27017';
 const dbName = 'studentsdb';
 let db;
@@ -78,13 +77,49 @@ app.get('/students/:id', async (req, res) => {
 // =================================================================
 // route to create a new student
 // =================================================================
+app.post('/students', async (req, res) => {
+    try {
+        const student = await req.collection.insertOne(req.body);
+        res.status(201).json(student);
+    } catch (err) {
+        res.status(500).send({ error: 'Failed to create student', details: err.message });
+    }
+});
+
 
 // Update a student by ID
 // =================================================================
 // route to update a student
 // =================================================================
+app.put('/students/:id', async (req, res) => {
+    try {
+        const result = await req.collection.updateOne(
+            { _id: new ObjectId(req.params.id) },
+            { $set: req.body }
+        );
+        if (result.matchedCount > 0) {
+            res.json(result);
+        } else {
+            res.status(404).send({ error: 'Student not found' });
+        }
+    } catch (err) {
+        res.status(500).send({ error: 'Failed to update student', details: err.message });
+    }
+});
 
 // Delete a student by ID
 // =================================================================
 // route to delete a given student
 // =================================================================
+app.delete('/students/:id', async (req, res) => {
+    try {
+        const result = await req.collection.deleteOne({ _id: new ObjectId(req.params.id) });
+        if (result.deletedCount > 0) {
+            res.sendStatus(204);
+        } else {
+            res.status(404).send({ error: 'Student not found' });
+        }
+    } catch (err) {
+        res.status(500).send({ error: 'Failed to delete student', details: err.message });
+    }
+});

@@ -58,17 +58,52 @@ app.get('/students/:id', async (req, res) => {
 //================================================================
 // route to create a new student
 //================================================================
+app.post('/students', async (req, res) => {
+    try {
+        const student = new Student(req.body);
+        await student.save();
+        res.status(201).json(student);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
 
 // Update a student by ID
 //================================================================
 // route to update(save) a  student
 //================================================================
+app.put('/students/:id', async (req, res) => {
+    try {
+        const student = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (student) {
+            res.json(student);
+        } else {
+            res.status(404).send('Student not found');
+        }
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
 
 
 // Delete a student by ID
 //================================================================
 // route to delete a student
 //================================================================
+app.delete('/students/:id', async (req, res) => {
+    try {
+        const result = await Student.findByIdAndDelete(req.params.id);
+        if (result) {
+            res.sendStatus(204);
+        } else {
+            res.status(404).send('Student not found');
+        }
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
 
 // Start the server
 const PORT = process.env.PORT || 3000;
